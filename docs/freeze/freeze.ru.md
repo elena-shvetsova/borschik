@@ -1,12 +1,12 @@
-# Static resources "freeze"
+# «Заморозка» статических ресурсов (freeze)
 
-What means "freeze", description and advantages of this technology you can get in [article at bem.info](http://bem.info/articles/borschik).
+Подробнее о том что такое "freeze", описание и преимущества использования данной технологии читайте в [статье на bem.info](http://bem.info/articles/borschik).
 
 ## .borschik config
 
-At first we need config. It's located in file `.borschik`.
+Для начала нам нужен конфиг. Он размещается в файле `.borschik`.
 
-File `.borschik` relates to its own directory and all subdirectories.
+Файл `.borschik`относится к собственной директории и ко всем вложенным директориям.
 ```js
 {
     "freeze_paths": {
@@ -16,15 +16,14 @@ File `.borschik` relates to its own directory and all subdirectories.
 }
 ```
 
-`freeze_paths` — this key defines which files will be frozen, and where any transformations in the file path of the frozen result.
+`freeze_paths` — этот ключ определяет какие файлы будут заморожены, и как преобразуются пути к файлам после заморозки.
 
-For example, when Borschik processes CSS file and finds links to images in `/i/bg`,
-borschik freezes these links, changing their path to `/_` (because `/i/bg/../../_` is '/_' ) and creates image copy in this path.
+Например, когда Borschik будет обрабатывать CSS-файл и найдет ссылки на картинки в папке`/i/bg`,
+Borschik заморозит , изменит их путь на  `/_` (т.к. `/i/bg/../../_` будет '/_' ) и создаст копию картинки на этом пути.
+Ключ объекта — указывает на директории, файлы в которой будут заморожены.
+Значение ключа - это директория, в которой будут храниться замороженные файлы,относительно первоначальной.
 
-Object key — directories whose files will be frozen.
-Key value - directory for resulting frozen files, relative to their initial path.
-
-Other example
+Еще пример:
 ```js
 {
     "freeze_paths": {
@@ -32,14 +31,14 @@ Other example
     }
 }
 ```
-Borschik freezes files from directory `i/bg` to `i/bg/_`
+Borschik заморозит файлы из директории `i/bg` в `i/bg/_`
 
-**Important note:**
-* Borschik does not freeze all files in directories but only those linked by processed files.
-* Borschik creates a copy of original files in freeze dir whose filename is a checksum of the file content.
+**Важное замечание:**
+* Borschik не замораживает все файлы в директориях, а только те, на которые есть ссылка в обрабатываемых файлах.
+* Borschik создает копию первоначального файла в директории с замороженными файлами, имя файла задается как контрольная сумма (хеш)от содержимого файла.
 
-## resource inlining
-There is special syntax (`:encodeURIComponent:` and `:base64:`) for resource inlining.
+## Склеивание данных (resource inlining)
+Для склеивания данных есть следующий синтаксис: (`:encodeURIComponent:` and `:base64:`).
 
 ```json
 {
@@ -50,9 +49,9 @@ There is special syntax (`:encodeURIComponent:` and `:base64:`) for resource inl
 }
 ```
 
-With this config all links to resources in `i/svg_images` or `i/gif_images` will be inlined. Borschik supports `base64` and `encodeURIComponent` encoding only.
+С этим конфигом все ссылки на ресурсы `i/svg_images` или `i/gif_images` будут склеены. Borschik поддерживает только кодировку `base64` и `encodeURIComponent`. 
 
-Example
+Например:
 ```css
 .gif {
     background: url("i/gif_images/icon.gif");
@@ -62,7 +61,7 @@ Example
 }
 ```
 
-Result
+В результате получаем:
 ```css
 .gif {
     background: url("data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==");
@@ -72,4 +71,4 @@ Result
 }
 ```
 
-Inlining in JS-files with `borschik.link()` is also supported.
+Склеивание в JS-файлах через `borschik.link()` также поддерживается.
